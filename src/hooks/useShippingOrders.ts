@@ -33,17 +33,15 @@ export const useCreateShippingOrder = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['shipping-orders'] });
-      toast({
-        title: 'Order Created',
-        description: 'Your shipping order has been saved successfully.',
-      });
+      console.log('Order created successfully with database trigger notification:', data.id);
     },
     onError: (error: any) => {
+      console.error('Order creation failed:', error);
       toast({
         title: 'Error',
-        description: error.message,
+        description: 'Failed to create order. Please try again.',
         variant: 'destructive',
       });
     },

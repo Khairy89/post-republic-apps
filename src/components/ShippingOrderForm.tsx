@@ -6,7 +6,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PriceBreakdown from "./PriceBreakdown";
 import { useShippingRates, useCountryZones, useFuelSurcharge } from "@/hooks/useShippingRates";
 import { useCreateShippingOrder } from "@/hooks/useShippingOrders";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 type FormState = {
@@ -163,34 +162,7 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequi
 
     setSubmitting(true);
     try {
-      // Prepare orderData with camelCase only
-      const orderData = {
-        userId: user.id,
-        recipientName: form.recipientName,
-        address: form.address,
-        zip: form.zip,
-        city: form.city,
-        state: form.state,
-        country: form.country,
-        phone: form.phone,
-        weight: form.weight,
-        length: form.length,
-        width: form.width,
-        height: form.height,
-        repacking: form.repacking,
-        basePrice: price.base,
-        fuelSurcharge: price.fuelSurcharge,
-        handlingFee: price.handling,
-        repackingFee: price.repacking,
-        totalPrice: price.total,
-        chargeableWeight: price.chargeableWeight,
-        actualWeight: price.actualWeight,
-        volumetricWeight: price.volumetricWeight,
-        zoneNumber: getCountryZone(form.country),
-        userEmail: user.email
-      };
-
-      // Save to database (backend will map to DB column names)
+      // Save to database - the database trigger will automatically notify you
       const savedOrder = await createOrderMutation.mutateAsync({
         user_id: user.id,
         recipient_name: form.recipientName,
@@ -216,22 +188,22 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequi
         zone_number: getCountryZone(form.country),
       });
 
-      // Call Edge Function with ONLY camelCase keys (including orderId after save)
-      const response = await supabase.functions.invoke('send-whatsapp-invoice', {
-        body: {
-          orderData: {
-            ...orderData,
-            orderId: savedOrder.id
-          }
-        }
+      console.log("Order saved successfully:", savedOrder.id);
+      
+      // Show success message
+      toast({
+        title: "Order Confirmed!",
+        description: "Your shipping order has been submitted and we've been notified automatically.",
       });
 
-      if (response.data?.whatsappUrl) {
-        window.open(response.data.whatsappUrl, '_blank');
-      }
       setConfirmed(true);
     } catch (error) {
       console.error('Order creation error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit order. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -240,11 +212,23 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequi
   if (confirmed) {
     return (
       <div className="bg-secondary/70 rounded-lg shadow p-8 text-center animate-in fade-in">
-        <h2 className="text-2xl font-bold mb-4">Order Confirmed</h2>
-        <p className="mb-2">Thank you for using PostRepublic!</p>
-        <p className="text-sm text-muted-foreground mb-4">
-          Your order has been saved and an invoice request has been sent via WhatsApp.
-        </p>
+        <div className="mb-4">
+          <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold mb-2 text-green-700">Order Confirmed!</h2>
+        </div>
+        <div className="space-y-2 mb-6">
+          <p className="text-lg">Thank you for using PostRepublic!</p>
+          <p className="text-sm text-muted-foreground">
+            Your order has been saved and we've been automatically notified.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            We'll contact you shortly to process your shipment.
+          </p>
+        </div>
         <Button size="lg" className="mt-2" onClick={() => {
           setShowBreakdown(false);
           setConfirmed(false);
