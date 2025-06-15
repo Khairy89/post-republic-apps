@@ -4,7 +4,6 @@ import React from "react";
 type Price = {
   base: number;
   fuelSurcharge: number;
-  emergencySurcharge: number;
   handling: number;
   repacking: number;
   total: number;
@@ -41,8 +40,10 @@ const PriceBreakdown: React.FC<{ price: Price }> = ({ price }) => (
     <dl className="space-y-2">
       <div className="flex justify-between"><dt>Base DHL rate</dt><dd>{asRM(price.base)}</dd></div>
       <div className="flex justify-between"><dt>Fuel surcharge</dt><dd>{asRM(price.fuelSurcharge)}</dd></div>
-      <div className="flex justify-between"><dt>Emergency surcharge</dt><dd>{asRM(price.emergencySurcharge)}</dd></div>
-      <div className="flex justify-between"><dt>Handling fee</dt><dd>{asRM(price.handling)}</dd></div>
+      <div className="flex justify-between">
+        <dt>Handling fee</dt>
+        <dd>{asRM(price.handling)}</dd>
+      </div>
       {price.repacking > 0 && <div className="flex justify-between"><dt>Repacking fee</dt><dd>{asRM(price.repacking)}</dd></div>}
       <div className="flex justify-between mt-2 font-bold py-2 border-t border-border">
         <dt>Total</dt>
@@ -51,6 +52,7 @@ const PriceBreakdown: React.FC<{ price: Price }> = ({ price }) => (
     </dl>
     <div className="text-xs text-muted-foreground mt-3">* Prices are estimates. Actual invoice may vary by DHL surcharges and currency.</div>
     <div className="text-xs text-muted-foreground">* Volumetric weight calculated using L×W×H÷5000</div>
+    <div className="text-xs text-muted-foreground">* Handling fee: RM20 for first kg + RM20 per additional kg</div>
   </div>
 );
 

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,10 +21,13 @@ type FormState = {
   height: number;
 };
 
-const HANDLING_FEE = 20;   // RM
 const REPACKING_FEE = 10;  // RM
-const EMERGENCY_SURCHARGE = 8; // RM
 const VOLUMETRIC_DIVISOR = 5000; // Standard DHL volumetric divisor (cm³/kg)
+
+// Calculate handling fee: RM20 for first kg + RM20 per additional kg
+const calculateHandlingFee = (chargeableWeight: number) => {
+  return 20 + (Math.max(0, chargeableWeight - 1) * 20);
+};
 
 const initialForm: FormState = {
   recipientName: "",
@@ -90,7 +92,6 @@ const ShippingOrderForm: React.FC = () => {
       return {
         base: 0,
         fuelSurcharge: 0,
-        emergencySurcharge: 0,
         handling: 0,
         repacking: 0,
         total: 0,
@@ -103,15 +104,15 @@ const ShippingOrderForm: React.FC = () => {
     const base = getShippingRate(chargeableWeight, zone);
     const fuelSurchargeRate = (fuelSurcharge?.rate_percentage || 12) / 100;
     const fuelSurchargeAmount = base * fuelSurchargeRate;
+    const handlingFee = calculateHandlingFee(chargeableWeight);
     
-    let total = base + fuelSurchargeAmount + EMERGENCY_SURCHARGE + HANDLING_FEE;
+    let total = base + fuelSurchargeAmount + handlingFee;
     if (form.repacking) total += REPACKING_FEE;
 
     return {
       base,
       fuelSurcharge: fuelSurchargeAmount,
-      emergencySurcharge: EMERGENCY_SURCHARGE,
-      handling: HANDLING_FEE,
+      handling: handlingFee,
       repacking: form.repacking ? REPACKING_FEE : 0,
       total,
       chargeableWeight,
@@ -165,6 +166,7 @@ const ShippingOrderForm: React.FC = () => {
     <form className="bg-card/70 rounded-xl shadow-2xl px-6 py-8 space-y-6 transition-colors animate-in fade-in"
           onSubmit={onSubmit}
     >
+      {/* Form fields and Package Details Section */}
       <h2 className="text-2xl font-semibold mb-2">Order International Shipping</h2>
       <div className="grid md:grid-cols-2 gap-4 gap-y-1">
         <div>
