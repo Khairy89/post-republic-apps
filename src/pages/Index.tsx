@@ -36,10 +36,27 @@ const Index = () => {
               Simple, reliable international shipping—powered by PostRepublic using DHL rates. Get your estimated price instantly.
             </p>
           </div>
-          {/* removed UserNav/Auth button from here */}
           <div />
         </div>
       </header>
+
+      {/* User Info Section in Card */}
+      <section className="flex justify-center mb-8">
+        <div className="w-full max-w-md bg-card shadow-sm border rounded-lg p-5 flex justify-center items-center">
+          {user ? (
+            <UserNav user={user} onSignOut={() => {}} />
+          ) : (
+            <Dialog open={showAuth} onOpenChange={setShowAuth}>
+              <DialogTrigger asChild>
+                <Button variant="outline">Sign In</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <AuthForm onSuccess={() => setShowAuth(false)} />
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
+      </section>
 
       {/* Main form - Always show to everyone */}
       <main className="flex-1 flex justify-center items-start">
@@ -50,22 +67,6 @@ const Index = () => {
           />
         </div>
       </main>
-
-      {/* UserNav/Auth - now moved below main, before footer */}
-      <div className="w-full flex justify-center mb-4">
-        {user ? (
-          <UserNav user={user} onSignOut={() => {}} />
-        ) : (
-          <Dialog open={showAuth} onOpenChange={setShowAuth}>
-            <DialogTrigger asChild>
-              <Button variant="outline">Sign In</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <AuthForm onSuccess={() => setShowAuth(false)} />
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
 
       {/* WhatsApp floating button */}
       <WhatsAppButton />
@@ -80,3 +81,4 @@ const Index = () => {
 };
 
 export default Index;
+
