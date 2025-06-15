@@ -42,7 +42,7 @@ const Index = () => {
 
       {/* User Info Section in Card */}
       <section className="flex justify-center mb-8">
-        <div className="w-full max-w-md bg-card shadow-sm border rounded-lg p-5 flex justify-center items-center">
+        <div className="w-full max-w-md bg-card shadow-sm border rounded-lg p-5 flex justify-center">
           {user ? (
             <UserNav user={user} onSignOut={() => {}} />
           ) : (
