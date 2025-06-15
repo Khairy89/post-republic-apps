@@ -24,14 +24,37 @@ export const useCreateShippingOrder = () => {
 
   return useMutation({
     mutationFn: async (orderData: any) => {
-      const { data, error } = await supabase
-        .from('shipping_orders')
-        .insert([orderData])
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      // Retry function with token refresh
+      const attemptCreateOrder = async (retryCount = 0): Promise<any> => {
+        try {
+          const { data, error } = await supabase
+            .from('shipping_orders')
+            .insert([orderData])
+            .select()
+            .single();
+          
+          if (error) throw error;
+          return data;
+        } catch (error: any) {
+          // If JWT expired and we haven't retried yet, try to refresh token and retry
+          if (error.code === 'PGRST301' && retryCount === 0) {
+            console.log('JWT expired, attempting to refresh token and retry...');
+            
+            const { error: refreshError } = await supabase.auth.refreshSession();
+            if (refreshError) {
+              console.error('Token refresh failed:', refreshError);
+              throw error; // Throw original error if refresh fails
+            }
+            
+            console.log('Token refreshed, retrying order creation...');
+            return attemptCreateOrder(1); // Retry once
+          }
+          
+          throw error;
+        }
+      };
+
+      return attemptCreateOrder();
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['shipping-orders'] });
@@ -39,9 +62,16 @@ export const useCreateShippingOrder = () => {
     },
     onError: (error: any) => {
       console.error('Order creation failed:', error);
+      
+      // Provide more specific error messages
+      let errorMessage = 'Failed to create order. Please try again.';
+      if (error.code === 'PGRST301') {
+        errorMessage = 'Your session has expired. Please refresh the page and try again.';
+      }
+      
       toast({
         title: 'Error',
-        description: 'Failed to create order. Please try again.',
+        description: errorMessage,
         variant: 'destructive',
       });
     },
