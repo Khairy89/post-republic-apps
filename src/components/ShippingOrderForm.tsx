@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PriceBreakdown from "./PriceBreakdown";
 import { useShippingRates, useCountryZones, useFuelSurcharge } from "@/hooks/useShippingRates";
+import { useCreateShippingOrder } from "@/hooks/useShippingOrders";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 type FormState = {
   recipientName: string;
@@ -20,6 +23,10 @@ type FormState = {
   width: number;
   height: number;
 };
+
+interface ShippingOrderFormProps {
+  user: any;
+}
 
 const REPACKING_FEE = 10;  // RM
 const VOLUMETRIC_DIVISOR = 5000; // Standard DHL volumetric divisor (cm³/kg)
@@ -44,14 +51,17 @@ const initialForm: FormState = {
   height: 0,
 };
 
-const ShippingOrderForm: React.FC = () => {
+const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user }) => {
   const [form, setForm] = useState<FormState>(initialForm);
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const { data: shippingRates } = useShippingRates();
   const { data: countryZones } = useCountryZones();
   const { data: fuelSurcharge } = useFuelSurcharge();
+  const createOrderMutation = useCreateShippingOrder();
+  const { toast } = useToast();
 
   // Calculate volumetric weight and determine chargeable weight
   const getChargeableWeight = () => {
@@ -141,6 +151,86 @@ const ShippingOrderForm: React.FC = () => {
     setShowBreakdown(true);
   };
 
+  const handleConfirmOrder = async () => {
+    if (!user) {
+      toast({
+        title: 'Authentication Required',
+        description: 'Please sign in to place an order.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const orderData = {
+        user_id: user.id,
+        recipient_name: form.recipientName,
+        address: form.address,
+        zip: form.zip,
+        city: form.city,
+        state: form.state,
+        country: form.country,
+        phone: form.phone,
+        weight: form.weight,
+        length: form.length,
+        width: form.width,
+        height: form.height,
+        repacking: form.repacking,
+        base_price: price.base,
+        fuel_surcharge: price.fuelSurcharge,
+        handling_fee: price.handling,
+        repacking_fee: price.repacking,
+        total_price: price.total,
+        chargeable_weight: price.chargeableWeight,
+        actual_weight: form.actualWeight,
+        volumetric_weight: price.volumetricWeight,
+        zone_number: getCountryZone(form.country),
+      };
+
+      const savedOrder = await createOrderMutation.mutateAsync(orderData);
+
+      // Send WhatsApp invoice
+      try {
+        const response = await supabase.functions.invoke('send-whatsapp-invoice', {
+          body: {
+            orderData: {
+              ...orderData,
+              orderId: savedOrder.id,
+              userEmail: user.email,
+              basePrice: price.base,
+              fuelSurcharge: price.fuelSurcharge,
+              handlingFee: price.handling,
+              repackingFee: price.repacking,
+              totalPrice: price.total,
+              chargeableWeight: price.chargeableWeight,
+              actualWeight: price.actualWeight,
+            }
+          }
+        });
+
+        if (response.data?.whatsappUrl) {
+          // Auto-open WhatsApp with the invoice details
+          window.open(response.data.whatsappUrl, '_blank');
+        }
+      } catch (whatsappError) {
+        console.error('WhatsApp send error:', whatsappError);
+        // Don't fail the order if WhatsApp fails
+        toast({
+          title: 'Order Saved',
+          description: 'Order saved but WhatsApp notification failed. Please contact us manually.',
+          variant: 'default',
+        });
+      }
+
+      setConfirmed(true);
+    } catch (error) {
+      console.error('Order creation error:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   if (confirmed) {
     // Confirmation step
     return (
@@ -148,7 +238,7 @@ const ShippingOrderForm: React.FC = () => {
         <h2 className="text-2xl font-bold mb-4">Order Confirmed</h2>
         <p className="mb-2">Thank you for using PostRepublic!</p>
         <p className="text-sm text-muted-foreground mb-4">
-          An invoice will be generated and sent to you via your preferred contact method.
+          Your order has been saved and an invoice request has been sent via WhatsApp.
         </p>
         <Button size="lg" className="mt-2" onClick={() => {
           setShowBreakdown(false);
@@ -168,6 +258,7 @@ const ShippingOrderForm: React.FC = () => {
     >
       {/* Form fields and Package Details Section */}
       <h2 className="text-2xl font-semibold mb-2">Order International Shipping</h2>
+      
       <div className="grid md:grid-cols-2 gap-4 gap-y-1">
         <div>
           <Label htmlFor="recipientName">Recipient Full Name</Label>
@@ -315,9 +406,10 @@ const ShippingOrderForm: React.FC = () => {
             size="lg"
             className="w-full mt-5"
             type="button"
-            onClick={() => setConfirmed(true)}
+            onClick={handleConfirmOrder}
+            disabled={submitting}
           >
-            Confirm & Request Invoice
+            {submitting ? 'Processing...' : 'Confirm & Request Invoice'}
           </Button>
         </div>
       )}

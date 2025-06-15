@@ -54,6 +54,120 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shipping_orders: {
+        Row: {
+          actual_weight: number
+          address: string
+          base_price: number
+          chargeable_weight: number
+          city: string
+          country: string
+          created_at: string
+          fuel_surcharge: number
+          handling_fee: number
+          height: number
+          id: string
+          length: number
+          phone: string
+          recipient_name: string
+          repacking: boolean | null
+          repacking_fee: number | null
+          state: string
+          status: string | null
+          total_price: number
+          updated_at: string
+          user_id: string | null
+          volumetric_weight: number
+          weight: number
+          width: number
+          zip: string
+          zone_number: number | null
+        }
+        Insert: {
+          actual_weight: number
+          address: string
+          base_price: number
+          chargeable_weight: number
+          city: string
+          country: string
+          created_at?: string
+          fuel_surcharge: number
+          handling_fee: number
+          height: number
+          id?: string
+          length: number
+          phone: string
+          recipient_name: string
+          repacking?: boolean | null
+          repacking_fee?: number | null
+          state: string
+          status?: string | null
+          total_price: number
+          updated_at?: string
+          user_id?: string | null
+          volumetric_weight: number
+          weight: number
+          width: number
+          zip: string
+          zone_number?: number | null
+        }
+        Update: {
+          actual_weight?: number
+          address?: string
+          base_price?: number
+          chargeable_weight?: number
+          city?: string
+          country?: string
+          created_at?: string
+          fuel_surcharge?: number
+          handling_fee?: number
+          height?: number
+          id?: string
+          length?: number
+          phone?: string
+          recipient_name?: string
+          repacking?: boolean | null
+          repacking_fee?: number | null
+          state?: string
+          status?: string | null
+          total_price?: number
+          updated_at?: string
+          user_id?: string | null
+          volumetric_weight?: number
+          weight?: number
+          width?: number
+          zip?: string
+          zone_number?: number | null
+        }
+        Relationships: []
+      }
       zone_weight_rates: {
         Row: {
           created_at: string
