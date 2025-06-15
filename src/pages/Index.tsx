@@ -40,8 +40,18 @@ const Index = () => {
           <div />
         </div>
       </header>
-      
-      {/* UserNav/Auth - move here */}
+
+      {/* Main form - Always show to everyone */}
+      <main className="flex-1 flex justify-center items-start">
+        <div className="w-full max-w-2xl px-3 md:px-0">
+          <ShippingOrderForm 
+            user={user} 
+            onAuthRequired={() => setShowAuth(true)} 
+          />
+        </div>
+      </main>
+
+      {/* UserNav/Auth - now moved below main, before footer */}
       <div className="w-full flex justify-center mb-4">
         {user ? (
           <UserNav user={user} onSignOut={() => {}} />
@@ -56,16 +66,6 @@ const Index = () => {
           </Dialog>
         )}
       </div>
-
-      {/* Main form - Always show to everyone */}
-      <main className="flex-1 flex justify-center items-start">
-        <div className="w-full max-w-2xl px-3 md:px-0">
-          <ShippingOrderForm 
-            user={user} 
-            onAuthRequired={() => setShowAuth(true)} 
-          />
-        </div>
-      </main>
 
       {/* WhatsApp floating button */}
       <WhatsAppButton />
