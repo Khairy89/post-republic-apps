@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +26,7 @@ type FormState = {
 
 interface ShippingOrderFormProps {
   user: any;
+  onAuthRequired?: () => void;
 }
 
 const REPACKING_FEE = 10;  // RM
@@ -52,7 +52,7 @@ const initialForm: FormState = {
   height: 0,
 };
 
-const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user }) => {
+const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequired }) => {
   const [form, setForm] = useState<FormState>(initialForm);
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -153,12 +153,11 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user }) => {
   };
 
   const handleConfirmOrder = async () => {
+    // Check if user is authenticated, if not trigger auth modal
     if (!user) {
-      toast({
-        title: 'Authentication Required',
-        description: 'Please sign in to place an order.',
-        variant: 'destructive',
-      });
+      if (onAuthRequired) {
+        onAuthRequired();
+      }
       return;
     }
 
@@ -211,12 +210,10 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user }) => {
         });
 
         if (response.data?.whatsappUrl) {
-          // Auto-open WhatsApp with the invoice details
           window.open(response.data.whatsappUrl, '_blank');
         }
       } catch (whatsappError) {
         console.error('WhatsApp send error:', whatsappError);
-        // Don't fail the order if WhatsApp fails
         toast({
           title: 'Order Saved',
           description: 'Order saved but WhatsApp notification failed. Please contact us manually.',
@@ -233,7 +230,6 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user }) => {
   };
 
   if (confirmed) {
-    // Confirmation step
     return (
       <div className="bg-secondary/70 rounded-lg shadow p-8 text-center animate-in fade-in">
         <h2 className="text-2xl font-bold mb-4">Order Confirmed</h2>
@@ -257,8 +253,9 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user }) => {
     <form className="bg-card/70 rounded-xl shadow-2xl px-6 py-8 space-y-6 transition-colors animate-in fade-in"
           onSubmit={onSubmit}
     >
-      {/* Form fields and Package Details Section */}
-      <h2 className="text-2xl font-semibold mb-2">Order International Shipping</h2>
+      <h2 className="text-2xl font-semibold mb-2">
+        {user ? 'Order International Shipping' : 'Check Shipping Rates'}
+      </h2>
       
       <div className="grid md:grid-cols-2 gap-4 gap-y-1">
         <div>
@@ -410,7 +407,7 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user }) => {
             onClick={handleConfirmOrder}
             disabled={submitting}
           >
-            {submitting ? 'Processing...' : 'Confirm & Request Invoice'}
+            {submitting ? 'Processing...' : user ? 'Confirm & Request Invoice' : 'Sign In to Confirm Order'}
           </Button>
         </div>
       )}

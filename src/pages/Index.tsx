@@ -53,22 +53,13 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Main form */}
+      {/* Main form - Always show to everyone */}
       <main className="flex-1 flex justify-center items-start">
         <div className="w-full max-w-2xl px-3 md:px-0">
-          {user ? (
-            <ShippingOrderForm user={user} />
-          ) : (
-            <div className="bg-card/70 rounded-xl shadow-2xl px-6 py-8 text-center">
-              <h2 className="text-2xl font-semibold mb-4">Welcome to PostRepublic</h2>
-              <p className="text-muted-foreground mb-6">
-                Please sign in to access our shipping calculator and place orders.
-              </p>
-              <Button onClick={() => setShowAuth(true)} size="lg">
-                Get Started - Sign In
-              </Button>
-            </div>
-          )}
+          <ShippingOrderForm 
+            user={user} 
+            onAuthRequired={() => setShowAuth(true)} 
+          />
         </div>
       </main>
 
