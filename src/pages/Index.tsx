@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import ShippingOrderForm from "@/components/ShippingOrderForm";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -42,13 +41,13 @@ const Index = () => {
 
       {/* User Info Section in Card */}
       <section className="flex justify-center mb-8">
-        <div className="w-full max-w-md bg-card shadow-sm border rounded-lg p-5 flex justify-center">
+        <div className="w-full max-w-md bg-card shadow-sm border rounded-lg p-5">
           {user ? (
             <UserNav user={user} onSignOut={() => {}} />
           ) : (
             <Dialog open={showAuth} onOpenChange={setShowAuth}>
               <DialogTrigger asChild>
-                <Button variant="outline">Sign In</Button>
+                <Button variant="outline" className="w-full">Sign In</Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
                 <AuthForm onSuccess={() => setShowAuth(false)} />
@@ -81,4 +80,3 @@ const Index = () => {
 };
 
 export default Index;
-
