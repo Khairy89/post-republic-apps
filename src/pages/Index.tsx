@@ -36,22 +36,26 @@ const Index = () => {
               Simple, reliable international shipping—powered by PostRepublic using DHL rates. Get your estimated price instantly.
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            {user ? (
-              <UserNav user={user} onSignOut={() => {}} />
-            ) : (
-              <Dialog open={showAuth} onOpenChange={setShowAuth}>
-                <DialogTrigger asChild>
-                  <Button variant="outline">Sign In</Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <AuthForm onSuccess={() => setShowAuth(false)} />
-                </DialogContent>
-              </Dialog>
-            )}
-          </div>
+          {/* removed UserNav/Auth button from here */}
+          <div />
         </div>
       </header>
+      
+      {/* UserNav/Auth - move here */}
+      <div className="w-full flex justify-center mb-4">
+        {user ? (
+          <UserNav user={user} onSignOut={() => {}} />
+        ) : (
+          <Dialog open={showAuth} onOpenChange={setShowAuth}>
+            <DialogTrigger asChild>
+              <Button variant="outline">Sign In</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <AuthForm onSuccess={() => setShowAuth(false)} />
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
 
       {/* Main form - Always show to everyone */}
       <main className="flex-1 flex justify-center items-start">
