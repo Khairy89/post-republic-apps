@@ -9,13 +9,102 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      country_zones: {
+        Row: {
+          country_code: string
+          country_name: string
+          created_at: string
+          id: string
+          zone_number: number
+        }
+        Insert: {
+          country_code: string
+          country_name: string
+          created_at?: string
+          id?: string
+          zone_number: number
+        }
+        Update: {
+          country_code?: string
+          country_name?: string
+          created_at?: string
+          id?: string
+          zone_number?: number
+        }
+        Relationships: []
+      }
+      fuel_surcharge_rates: {
+        Row: {
+          created_at: string
+          effective_date: string
+          id: string
+          rate_percentage: number
+        }
+        Insert: {
+          created_at?: string
+          effective_date?: string
+          id?: string
+          rate_percentage?: number
+        }
+        Update: {
+          created_at?: string
+          effective_date?: string
+          id?: string
+          rate_percentage?: number
+        }
+        Relationships: []
+      }
+      zone_weight_rates: {
+        Row: {
+          created_at: string
+          id: string
+          weight_kg: number
+          zone_1: number | null
+          zone_2: number | null
+          zone_3: number | null
+          zone_4: number | null
+          zone_5: number | null
+          zone_6: number | null
+          zone_7: number | null
+          zone_8: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          weight_kg: number
+          zone_1?: number | null
+          zone_2?: number | null
+          zone_3?: number | null
+          zone_4?: number | null
+          zone_5?: number | null
+          zone_6?: number | null
+          zone_7?: number | null
+          zone_8?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          weight_kg?: number
+          zone_1?: number | null
+          zone_2?: number | null
+          zone_3?: number | null
+          zone_4?: number | null
+          zone_5?: number | null
+          zone_6?: number | null
+          zone_7?: number | null
+          zone_8?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_shipping_rate: {
+        Args: { target_weight: number; target_zone: number }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never

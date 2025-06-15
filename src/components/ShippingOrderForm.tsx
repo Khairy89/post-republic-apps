@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PriceBreakdown from "./PriceBreakdown";
+import { useShippingRates, useCountryZones, useFuelSurcharge } from "@/hooks/useShippingRates";
 
 type FormState = {
   recipientName: string;
@@ -22,6 +24,7 @@ type FormState = {
 
 const HANDLING_FEE = 20;   // RM
 const REPACKING_FEE = 10;  // RM
+const EMERGENCY_SURCHARGE = 8; // RM
 const VOLUMETRIC_DIVISOR = 5000; // Standard DHL volumetric divisor (cm³/kg)
 
 const initialForm: FormState = {
@@ -44,24 +47,70 @@ const ShippingOrderForm: React.FC = () => {
   const [showBreakdown, setShowBreakdown] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
+  const { data: shippingRates } = useShippingRates();
+  const { data: countryZones } = useCountryZones();
+  const { data: fuelSurcharge } = useFuelSurcharge();
+
   // Calculate volumetric weight and determine chargeable weight
   const getChargeableWeight = () => {
     const volumetricWeight = (form.length * form.width * form.height) / VOLUMETRIC_DIVISOR;
     return Math.max(form.weight, volumetricWeight);
   };
 
-  // Mock pricing logic: RM100 base, plus fees
+  // Get zone for selected country
+  const getCountryZone = (countryName: string) => {
+    const countryData = countryZones?.find(c => c.country_name === countryName);
+    return countryData?.zone_number || null;
+  };
+
+  // Get shipping rate based on weight and zone
+  const getShippingRate = (weight: number, zone: number) => {
+    if (!shippingRates || !zone) return 0;
+    
+    // Find the appropriate weight bracket (next weight >= chargeable weight)
+    const rateData = shippingRates.find(rate => rate.weight_kg >= weight);
+    if (!rateData) {
+      // If weight exceeds our table, use the highest bracket
+      const highestRate = shippingRates[shippingRates.length - 1];
+      const zoneColumn = `zone_${zone}` as keyof typeof highestRate;
+      return Number(highestRate[zoneColumn]) || 0;
+    }
+    
+    const zoneColumn = `zone_${zone}` as keyof typeof rateData;
+    return Number(rateData[zoneColumn]) || 0;
+  };
+
+  // Calculate estimated price using real rates
   const getEstimatedPrice = () => {
     const chargeableWeight = getChargeableWeight();
-    let base = Math.max(100, chargeableWeight * 15); // Base rate increases with weight
-    let fuelSurcharge = 0.12 * base; // Example 12%
-    let emergencySurcharge = 8; // Could be dynamic
-    let total = base + fuelSurcharge + emergencySurcharge + HANDLING_FEE;
+    const zone = getCountryZone(form.country);
+    
+    if (!zone) {
+      // Return mock data if no zone found
+      return {
+        base: 0,
+        fuelSurcharge: 0,
+        emergencySurcharge: 0,
+        handling: 0,
+        repacking: 0,
+        total: 0,
+        chargeableWeight,
+        actualWeight: form.weight,
+        volumetricWeight: (form.length * form.width * form.height) / VOLUMETRIC_DIVISOR,
+      };
+    }
+
+    const base = getShippingRate(chargeableWeight, zone);
+    const fuelSurchargeRate = (fuelSurcharge?.rate_percentage || 12) / 100;
+    const fuelSurchargeAmount = base * fuelSurchargeRate;
+    
+    let total = base + fuelSurchargeAmount + EMERGENCY_SURCHARGE + HANDLING_FEE;
     if (form.repacking) total += REPACKING_FEE;
+
     return {
       base,
-      fuelSurcharge,
-      emergencySurcharge,
+      fuelSurcharge: fuelSurchargeAmount,
+      emergencySurcharge: EMERGENCY_SURCHARGE,
       handling: HANDLING_FEE,
       repacking: form.repacking ? REPACKING_FEE : 0,
       total,
@@ -80,6 +129,10 @@ const ShippingOrderForm: React.FC = () => {
       ...f,
       [name]: type === "checkbox" ? checked : type === "number" ? parseFloat(value) || 0 : value,
     }));
+  };
+
+  const onCountryChange = (value: string) => {
+    setForm((f) => ({ ...f, country: value }));
   };
 
   const onSubmit = (e: React.FormEvent) => {
@@ -104,6 +157,9 @@ const ShippingOrderForm: React.FC = () => {
       </div>
     );
   }
+
+  const availableCountries = countryZones?.map(c => c.country_name).sort() || [];
+  const selectedZone = getCountryZone(form.country);
 
   return (
     <form className="bg-card/70 rounded-xl shadow-2xl px-6 py-8 space-y-6 transition-colors animate-in fade-in"
@@ -137,7 +193,21 @@ const ShippingOrderForm: React.FC = () => {
         </div>
         <div>
           <Label htmlFor="country">Country</Label>
-          <Input name="country" id="country" value={form.country} onChange={onInputChange} required className="mt-1" />
+          <Select value={form.country} onValueChange={onCountryChange} required>
+            <SelectTrigger className="mt-1">
+              <SelectValue placeholder="Select country" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableCountries.map((country) => (
+                <SelectItem key={country} value={country}>
+                  {country}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {selectedZone && (
+            <p className="text-xs text-muted-foreground mt-1">Zone {selectedZone}</p>
+          )}
         </div>
       </div>
 
@@ -232,7 +302,7 @@ const ShippingOrderForm: React.FC = () => {
       </div>
 
       {!showBreakdown && (
-        <Button type="submit" size="lg" className="w-full mt-4">
+        <Button type="submit" size="lg" className="w-full mt-4" disabled={!form.country || !selectedZone}>
           Check Shipping Cost
         </Button>
       )}
