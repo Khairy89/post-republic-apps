@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import ShippingOrderForm from "@/components/ShippingOrderForm";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -8,24 +7,21 @@ import UserNav from "@/components/UserNav";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
 const Index = () => {
-  const { user, loading } = useAuth();
+  const {
+    user,
+    loading
+  } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
-
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    return <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
           <p>Loading...</p>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="relative min-h-screen flex flex-col bg-background text-foreground transition-colors">
+  return <div className="relative min-h-screen flex flex-col bg-background text-foreground transition-colors">
       {/* Header */}
       <header className="w-full flex flex-col items-center py-10 mb-2">
         <div className="w-full max-w-6xl px-4 flex justify-between items-start mb-6">
@@ -36,35 +32,23 @@ const Index = () => {
               Simple, reliable international shipping—powered by PostRepublic using DHL rates. Get your estimated price instantly.
             </p>
           </div>
-          <div />
+          <div className="flex items-center gap-4">
+            {user ? <UserNav user={user} onSignOut={() => {}} /> : <Dialog open={showAuth} onOpenChange={setShowAuth}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="mx-0 px-[100px]">Sign In</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <AuthForm onSuccess={() => setShowAuth(false)} />
+                </DialogContent>
+              </Dialog>}
+          </div>
         </div>
       </header>
-
-      {/* User Info Section in Card */}
-      <section className="flex justify-center mb-8">
-        <div className="w-full max-w-md bg-card shadow-sm border rounded-lg p-5 flex justify-center items-center">
-          {user ? (
-            <UserNav user={user} onSignOut={() => {}} />
-          ) : (
-            <Dialog open={showAuth} onOpenChange={setShowAuth}>
-              <DialogTrigger asChild>
-                <Button variant="outline">Sign In</Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <AuthForm onSuccess={() => setShowAuth(false)} />
-              </DialogContent>
-            </Dialog>
-          )}
-        </div>
-      </section>
 
       {/* Main form - Always show to everyone */}
       <main className="flex-1 flex justify-center items-start">
         <div className="w-full max-w-2xl px-3 md:px-0">
-          <ShippingOrderForm 
-            user={user} 
-            onAuthRequired={() => setShowAuth(true)} 
-          />
+          <ShippingOrderForm user={user} onAuthRequired={() => setShowAuth(true)} />
         </div>
       </main>
 
@@ -76,9 +60,6 @@ const Index = () => {
         <ContactSection />
         <div className="text-xs text-center text-muted-foreground pt-6">© {new Date().getFullYear()} PostRepublic. All rights reserved.</div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
-
