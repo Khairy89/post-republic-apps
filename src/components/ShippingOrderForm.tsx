@@ -163,7 +163,35 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequi
 
     setSubmitting(true);
     try {
+      // Prepare orderData with camelCase only
       const orderData = {
+        userId: user.id,
+        recipientName: form.recipientName,
+        address: form.address,
+        zip: form.zip,
+        city: form.city,
+        state: form.state,
+        country: form.country,
+        phone: form.phone,
+        weight: form.weight,
+        length: form.length,
+        width: form.width,
+        height: form.height,
+        repacking: form.repacking,
+        basePrice: price.base,
+        fuelSurcharge: price.fuelSurcharge,
+        handlingFee: price.handling,
+        repackingFee: price.repacking,
+        totalPrice: price.total,
+        chargeableWeight: price.chargeableWeight,
+        actualWeight: price.actualWeight,
+        volumetricWeight: price.volumetricWeight,
+        zoneNumber: getCountryZone(form.country),
+        userEmail: user.email
+      };
+
+      // Save to database (backend will map to DB column names)
+      const savedOrder = await createOrderMutation.mutateAsync({
         user_id: user.id,
         recipient_name: form.recipientName,
         address: form.address,
@@ -186,41 +214,21 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequi
         actual_weight: price.actualWeight,
         volumetric_weight: price.volumetricWeight,
         zone_number: getCountryZone(form.country),
-      };
+      });
 
-      const savedOrder = await createOrderMutation.mutateAsync(orderData);
-
-      // Send WhatsApp invoice
-      try {
-        const response = await supabase.functions.invoke('send-whatsapp-invoice', {
-          body: {
-            orderData: {
-              ...orderData,
-              orderId: savedOrder.id,
-              userEmail: user.email,
-              basePrice: price.base,
-              fuelSurcharge: price.fuelSurcharge,
-              handlingFee: price.handling,
-              repackingFee: price.repacking,
-              totalPrice: price.total,
-              chargeableWeight: price.chargeableWeight,
-              actualWeight: price.actualWeight,
-            }
+      // Call Edge Function with ONLY camelCase keys (including orderId after save)
+      const response = await supabase.functions.invoke('send-whatsapp-invoice', {
+        body: {
+          orderData: {
+            ...orderData,
+            orderId: savedOrder.id
           }
-        });
-
-        if (response.data?.whatsappUrl) {
-          window.open(response.data.whatsappUrl, '_blank');
         }
-      } catch (whatsappError) {
-        console.error('WhatsApp send error:', whatsappError);
-        toast({
-          title: 'Order Saved',
-          description: 'Order saved but WhatsApp notification failed. Please contact us manually.',
-          variant: 'default',
-        });
-      }
+      });
 
+      if (response.data?.whatsappUrl) {
+        window.open(response.data.whatsappUrl, '_blank');
+      }
       setConfirmed(true);
     } catch (error) {
       console.error('Order creation error:', error);
