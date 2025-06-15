@@ -42,7 +42,7 @@ const UserNav: React.FC<UserNavProps> = ({ user, onSignOut }) => {
           <span className="hidden sm:inline">Sign Out</span>
         </Button>
       </div>
-      <div className="flex flex-col items-center gap-2 text-sm">
+      <div className="flex flex-row items-center gap-2 text-sm">
         <User size={20} />
         <span className="sm:inline">{user?.email}</span>
       </div>
