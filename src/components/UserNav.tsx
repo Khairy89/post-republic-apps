@@ -29,21 +29,23 @@ const UserNav: React.FC<UserNavProps> = ({ user, onSignOut }) => {
   };
 
   return (
-    <div className="flex items-center gap-4">
-      <div className="flex items-center gap-2 text-sm">
-        <User size={16} />
-        <span className="hidden sm:inline">{user?.email}</span>
-      </div>
-      <Link to="/orders">
-        <Button variant="outline" size="sm" className="flex items-center gap-2">
-          <List size={16} />
-          <span className="hidden sm:inline">My Orders</span>
+    <div className="flex flex-col items-center gap-4">
+      <div className="flex gap-2">
+        <Link to="/orders">
+          <Button variant="outline" size="sm" className="flex items-center gap-2">
+            <List size={16} />
+            <span className="hidden sm:inline">My Orders</span>
+          </Button>
+        </Link>
+        <Button variant="outline" size="sm" onClick={handleSignOut}>
+          <LogOut size={16} className="sm:mr-2" />
+          <span className="hidden sm:inline">Sign Out</span>
         </Button>
-      </Link>
-      <Button variant="outline" size="sm" onClick={handleSignOut}>
-        <LogOut size={16} className="sm:mr-2" />
-        <span className="hidden sm:inline">Sign Out</span>
-      </Button>
+      </div>
+      <div className="flex flex-col items-center gap-2 text-sm">
+        <User size={20} />
+        <span className="sm:inline">{user?.email}</span>
+      </div>
     </div>
   );
 };
