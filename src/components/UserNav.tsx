@@ -3,7 +3,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, List } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface UserNavProps {
   user: any;
@@ -33,6 +34,12 @@ const UserNav: React.FC<UserNavProps> = ({ user, onSignOut }) => {
         <User size={16} />
         <span className="hidden sm:inline">{user?.email}</span>
       </div>
+      <Link to="/orders">
+        <Button variant="outline" size="sm" className="flex items-center gap-2">
+          <List size={16} />
+          <span className="hidden sm:inline">My Orders</span>
+        </Button>
+      </Link>
       <Button variant="outline" size="sm" onClick={handleSignOut}>
         <LogOut size={16} className="sm:mr-2" />
         <span className="hidden sm:inline">Sign Out</span>
