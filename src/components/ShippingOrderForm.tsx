@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -183,7 +184,7 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user }) => {
         repacking_fee: price.repacking,
         total_price: price.total,
         chargeable_weight: price.chargeableWeight,
-        actual_weight: form.actualWeight,
+        actual_weight: price.actualWeight,
         volumetric_weight: price.volumetricWeight,
         zone_number: getCountryZone(form.country),
       };
