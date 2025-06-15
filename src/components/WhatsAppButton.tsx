@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Whatsapp } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
 const WHATSAPP_NUMBER = "60123456789"; // TODO: set your number
 
@@ -13,7 +13,7 @@ const WhatsAppButton: React.FC = () => (
     aria-label="Chat on WhatsApp"
     title="Chat on WhatsApp"
   >
-    <Whatsapp size={28} className="group-hover:scale-110 transition-transform" />
+    <MessageCircle size={28} className="group-hover:scale-110 transition-transform" />
     <span className="hidden md:inline text-lg font-bold pr-2">WhatsApp</span>
   </a>
 );
