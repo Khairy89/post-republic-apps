@@ -4,7 +4,7 @@ import { useShippingOrders } from "@/hooks/useShippingOrders";
 import { useAuth } from "@/hooks/useAuth";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Link } from "react-router-dom";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ExternalLink } from "lucide-react";
 
 const OrdersPage: React.FC = () => {
   const { user } = useAuth();
@@ -22,7 +22,7 @@ const OrdersPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto pt-10 pb-20 px-3">
+    <div className="max-w-6xl mx-auto pt-10 pb-20 px-3">
       <h2 className="text-2xl font-bold mb-6 text-center">My Orders</h2>
       {isLoading ? (
         <div className="flex justify-center py-12">Loading orders...</div>
@@ -40,6 +40,7 @@ const OrdersPage: React.FC = () => {
                 <TableHead>Address</TableHead>
                 <TableHead>Created</TableHead>
                 <TableHead>Total (RM)</TableHead>
+                <TableHead>Tracking</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -63,6 +64,21 @@ const OrdersPage: React.FC = () => {
                   </TableCell>
                   <TableCell>{new Date(order.created_at).toLocaleString()}</TableCell>
                   <TableCell>{order.total_price?.toFixed(2)}</TableCell>
+                  <TableCell>
+                    {order.tracking_number ? (
+                      <a
+                        href={`https://www.dhl.com/en/express/tracking.html?AWB=${order.tracking_number}&brand=DHL`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+                      >
+                        {order.tracking_number}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    ) : (
+                      <span className="text-muted-foreground text-sm">Not available</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Link
                       to={`/orders/${order.id}`}
