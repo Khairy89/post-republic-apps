@@ -12,7 +12,25 @@ serve(async (req) => {
   }
 
   try {
-    const { orderData } = await req.json();
+    const body = await req.json();
+    console.log("Parsed body from request:", body);
+
+    // Add clear check for missing orderData
+    if (!body || !body.orderData) {
+      console.error("Edge Function Error: orderData is missing from request body. Received body:", body);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "orderData missing in request body. Make sure to send { orderData: { ... } }"
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        }
+      );
+    }
+
+    const { orderData } = body;
 
     // Expect orderData to use camelCase keys everywhere
     const message = `
