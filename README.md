@@ -1,73 +1,79 @@
-# Welcome to your Lovable project
+# Courier Service Project
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/2020f5eb-bfec-4fde-ada5-d00d18021482
+This is a modern courier service management system built with cutting-edge web technologies. The application provides a robust platform for managing courier services, tracking deliveries, and handling customer interactions.
 
-## How can I edit this code?
+## Live Demo
 
-There are several ways of editing your application.
+[![Courier Service Dashboard](./assets/screenshot.png)](https://post-republic.lovable.app/)
 
-**Use Lovable**
+*Click the image above to visit the live website*
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2020f5eb-bfec-4fde-ada5-d00d18021482) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+Before you begin, ensure you have the following installed:
+- Node.js & npm - [Install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Follow these steps to set up the project locally:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Step 1: Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Step 2: Navigate to the project directory
+cd courier-service
 
-# Step 3: Install the necessary dependencies.
+# Step 3: Install dependencies
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Development
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Available Scripts
 
-**Use GitHub Codespaces**
+- `npm run dev` - Starts the development server with hot-reloading
+- `npm run build` - Builds the application for production
+- `npm run preview` - Previews the production build locally
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Technology Stack
 
-## What technologies are used for this project?
+This project is built with modern web technologies:
 
-This project is built with:
+- **Vite** - Next Generation Frontend Tooling
+- **TypeScript** - For type-safe code
+- **React** - UI Library
+- **shadcn-ui** - Beautiful UI components
+- **Tailwind CSS** - Utility-first CSS framework
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Features
 
-## How can I deploy this project?
+- Real-time delivery tracking
+- Customer management
+- Delivery scheduling
+- Route optimization
+- Analytics dashboard
+- Mobile-responsive design
 
-Simply open [Lovable](https://lovable.dev/projects/2020f5eb-bfec-4fde-ada5-d00d18021482) and click on Share -> Publish.
+## Contributing
 
-## Can I connect a custom domain to my Lovable project?
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Yes, you can!
+## License
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Support
+
+For support, please open an issue in the GitHub repository or contact the development team.
