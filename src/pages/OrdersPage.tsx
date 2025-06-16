@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Link } from "react-router-dom";
 import { AlertCircle, ExternalLink } from "lucide-react";
+import TrackingNumberModal from "@/components/TrackingNumberModal";
 
 const OrdersPage: React.FC = () => {
   const { user } = useAuth();
@@ -65,19 +66,26 @@ const OrdersPage: React.FC = () => {
                   <TableCell>{new Date(order.created_at).toLocaleString()}</TableCell>
                   <TableCell>{order.total_price?.toFixed(2)}</TableCell>
                   <TableCell>
-                    {order.tracking_number ? (
-                      <a
-                        href={`https://www.dhl.com/en/express/tracking.html?AWB=${order.tracking_number}&brand=DHL`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
-                      >
-                        {order.tracking_number}
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    ) : (
-                      <span className="text-muted-foreground text-sm">Not available</span>
-                    )}
+                    <div className="flex items-center">
+                      {order.tracking_number ? (
+                        <a
+                          href={`https://www.dhl.com/en/express/tracking.html?AWB=${order.tracking_number}&brand=DHL`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+                        >
+                          {order.tracking_number}
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      ) : (
+                        <span className="text-muted-foreground text-sm">Not available</span>
+                      )}
+                      <TrackingNumberModal
+                        orderId={order.id}
+                        currentTrackingNumber={order.tracking_number}
+                        recipientName={order.recipient_name}
+                      />
+                    </div>
                   </TableCell>
                   <TableCell>
                     <Link

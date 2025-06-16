@@ -102,6 +102,7 @@ export type Database = {
           state: string
           status: string | null
           total_price: number
+          tracking_number: string | null
           updated_at: string
           user_id: string | null
           volumetric_weight: number
@@ -130,6 +131,7 @@ export type Database = {
           state: string
           status?: string | null
           total_price: number
+          tracking_number?: string | null
           updated_at?: string
           user_id?: string | null
           volumetric_weight: number
@@ -158,6 +160,7 @@ export type Database = {
           state?: string
           status?: string | null
           total_price?: number
+          tracking_number?: string | null
           updated_at?: string
           user_id?: string | null
           volumetric_weight?: number

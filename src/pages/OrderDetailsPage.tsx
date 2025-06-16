@@ -1,9 +1,11 @@
+
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ExternalLink } from "lucide-react";
+import TrackingNumberModal from "@/components/TrackingNumberModal";
 
 const fetchOrderById = async (id: string) => {
   const { data, error } = await supabase
@@ -44,20 +46,28 @@ const OrderDetailsPage: React.FC = () => {
       <h2 className="text-xl font-bold mb-4">Order Details</h2>
       <div className="border p-4 rounded-lg bg-background shadow-sm">
         <div className="mb-2"><span className="font-medium">Status:</span> <span className="capitalize">{order.status || "pending"}</span></div>
-        <div className="mb-2"><span className="font-medium">Tracking Number:</span> 
-          {order.tracking_number ? (
-            <a
-              href={`https://www.dhl.com/en/express/tracking.html?AWB=${order.tracking_number}&brand=DHL`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline ml-2"
-            >
-              {order.tracking_number}
-              <ExternalLink className="h-3 w-3" />
-            </a>
-          ) : (
-            <span className="text-muted-foreground text-sm ml-2">Not available</span>
-          )}
+        <div className="mb-2">
+          <span className="font-medium">Tracking Number:</span> 
+          <div className="inline-flex items-center ml-2">
+            {order.tracking_number ? (
+              <a
+                href={`https://www.dhl.com/en/express/tracking.html?AWB=${order.tracking_number}&brand=DHL`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+              >
+                {order.tracking_number}
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            ) : (
+              <span className="text-muted-foreground text-sm">Not available</span>
+            )}
+            <TrackingNumberModal
+              orderId={order.id}
+              currentTrackingNumber={order.tracking_number}
+              recipientName={order.recipient_name}
+            />
+          </div>
         </div>
         <div className="mb-2"><span className="font-medium">Recipient:</span> {order.recipient_name}</div>
         <div className="mb-2"><span className="font-medium">Destination:</span> {order.address}, {order.zip}, {order.city}, {order.state}, {order.country}</div>
