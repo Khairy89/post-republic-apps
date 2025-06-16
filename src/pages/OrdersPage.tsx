@@ -2,13 +2,16 @@
 import React from "react";
 import { useShippingOrders } from "@/hooks/useShippingOrders";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Link } from "react-router-dom";
 import { AlertCircle, ExternalLink } from "lucide-react";
 import TrackingNumberModal from "@/components/TrackingNumberModal";
+import AdminSetup from "@/components/AdminSetup";
 
 const OrdersPage: React.FC = () => {
   const { user } = useAuth();
+  const { isAdmin, loading: roleLoading } = useUserRole();
   const { data: orders, isLoading, error } = useShippingOrders();
 
   if (!user) {
@@ -25,6 +28,10 @@ const OrdersPage: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto pt-10 pb-20 px-3">
       <h2 className="text-2xl font-bold mb-6 text-center">My Orders</h2>
+      
+      {/* Show admin setup component if user is authenticated but not yet admin */}
+      {user && !roleLoading && !isAdmin && <AdminSetup />}
+      
       {isLoading ? (
         <div className="flex justify-center py-12">Loading orders...</div>
       ) : error ? (

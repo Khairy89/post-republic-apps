@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Edit, Plus } from "lucide-react";
+import { useUserRole } from "@/hooks/useUserRole";
 
 interface TrackingNumberModalProps {
   orderId: string;
@@ -24,6 +25,7 @@ const TrackingNumberModal: React.FC<TrackingNumberModalProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { isAdmin, loading } = useUserRole();
 
   const updateTrackingMutation = useMutation({
     mutationFn: async (newTrackingNumber: string) => {
@@ -59,6 +61,11 @@ const TrackingNumberModal: React.FC<TrackingNumberModalProps> = ({
     e.preventDefault();
     updateTrackingMutation.mutate(trackingNumber);
   };
+
+  // Don't render the button if user is not admin or still loading
+  if (loading || !isAdmin) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
