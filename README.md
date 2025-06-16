@@ -2,7 +2,19 @@
 
 ## Project Overview
 
-This is a modern courier service management system built with cutting-edge web technologies. The application provides a robust platform for managing courier services, tracking deliveries, and handling customer interactions.
+This is a modern courier service management platform tailored for DHL shipments, built to simplify postage operations for both users and administrators. The system allows customers to create delivery orders, check pricing based on destination zones using a stored DHL rate card, and track their shipments in real-time.
+
+Users must sign in with their own credentials to view their order history, track previous shipments, and manage new requests. On the backend, admins manage pricing data, order records, and zone mappings using Supabase as the database and authentication platform.
+
+Key highlights:
+
+- User authentication with personalized order history
+
+- Dynamic pricing based on country zones and DHL rate card
+
+- Real-time shipment tracking
+
+- Admin dashboard powered by Supabase for data management
 
 ## Live Demo
 
@@ -77,3 +89,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Support
 
 For support, please open an issue in the GitHub repository or contact the development team.
+
+Visit my profile at www.Nexflow.biz
