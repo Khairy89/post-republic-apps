@@ -6,7 +6,7 @@ This is a modern courier service management system built with cutting-edge web t
 
 ## Live Demo
 
-[![Courier Service Dashboard](./assets/screenshot.png)](https://post-republic.lovable.app/)
+[![Courier Service Dashboard](./assets/screenshot.PNG)](https://post-republic.lovable.app/)
 
 *Click the image above to visit the live website*
 
