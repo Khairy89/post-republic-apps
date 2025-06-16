@@ -13,6 +13,7 @@ import { Search, LogIn } from "lucide-react";
 const Index = () => {
   const { user, loading } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
   if (loading) {
     return (
@@ -24,6 +25,11 @@ const Index = () => {
       </div>
     );
   }
+
+  const handleAuthOpen = (mode: 'login' | 'register') => {
+    setAuthMode(mode);
+    setShowAuth(true);
+  };
 
   return (
     <div className="relative min-h-screen flex flex-col bg-background text-foreground transition-colors">
@@ -49,17 +55,30 @@ const Index = () => {
                 <>
                   <Dialog open={showAuth} onOpenChange={setShowAuth}>
                     <DialogTrigger asChild>
-                      <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="flex items-center gap-2"
+                        onClick={() => handleAuthOpen('login')}
+                      >
                         <LogIn size={16} />
                         <span className="hidden sm:inline">Login</span>
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
-                      <AuthForm onSuccess={() => setShowAuth(false)} />
+                      <AuthForm 
+                        initialMode={authMode}
+                        onSuccess={() => setShowAuth(false)} 
+                      />
                     </DialogContent>
                   </Dialog>
                   
-                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex items-center gap-2"
+                    onClick={() => handleAuthOpen('register')}
+                  >
                     <span>Register</span>
                   </Button>
                 </>

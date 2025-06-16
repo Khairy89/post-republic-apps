@@ -9,10 +9,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 interface AuthFormProps {
   onSuccess: () => void;
+  initialMode?: 'login' | 'register';
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
-  const [isLogin, setIsLogin] = useState(true);
+const AuthForm: React.FC<AuthFormProps> = ({ onSuccess, initialMode = 'login' }) => {
+  const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
