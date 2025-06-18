@@ -44,7 +44,7 @@ const Index = () => {
                 <img 
                   src="/assets/logo_post-transparent.png" 
                   alt="PostRepublic" 
-                  className="h-8 w-auto"
+                  className="h-12 w-auto"
                 />
               </Link>
             </div>
