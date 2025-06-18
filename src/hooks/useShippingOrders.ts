@@ -1,11 +1,10 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useUserRole } from '@/hooks/useUserRole';
 
 export const useShippingOrders = () => {
-  const { isAdmin } = useUserRole();
+  const { isAdmin, loading } = useUserRole();
   
   return useQuery({
     queryKey: ['shipping-orders', isAdmin],
@@ -27,6 +26,7 @@ export const useShippingOrders = () => {
       if (error) throw error;
       return data;
     },
+    enabled: !loading, // Wait for role loading to complete
   });
 };
 

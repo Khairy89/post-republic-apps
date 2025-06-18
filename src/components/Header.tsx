@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -33,7 +34,13 @@ const Header: React.FC<HeaderProps> = ({ user, onSignOut }) => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-primary">PostRepublic</h1>
+            <Link to="/" className="flex items-center">
+              <img 
+                src="/assets/logo_post-transparent.png" 
+                alt="PostRepublic" 
+                className="h-8 w-auto"
+              />
+            </Link>
           </div>
           {/* Navigation Items */}
           <div className="flex items-center gap-6">
@@ -58,4 +65,4 @@ const Header: React.FC<HeaderProps> = ({ user, onSignOut }) => {
   );
 };
 
-export default Header; 
+export default Header;

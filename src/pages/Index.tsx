@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Search, LogIn } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -39,7 +40,13 @@ const Index = () => {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-primary">PostRepublic</h1>
+              <Link to="/" className="flex items-center">
+                <img 
+                  src="/assets/logo_post-transparent.png" 
+                  alt="PostRepublic" 
+                  className="h-8 w-auto"
+                />
+              </Link>
             </div>
 
             {/* Navigation Items */}
