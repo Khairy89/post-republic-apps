@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useShippingOrders } from "@/hooks/useShippingOrders";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,6 +6,7 @@ import { Link } from "react-router-dom";
 import { AlertCircle, ExternalLink, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TrackingNumberModal from "@/components/TrackingNumberModal";
+import PaymentStatusModal from "@/components/PaymentStatusModal";
 import Header from '@/components/Header';
 
 const OrdersPage: React.FC = () => {
@@ -84,15 +84,22 @@ const OrdersPage: React.FC = () => {
                     <TableCell>{new Date(order.created_at).toLocaleString()}</TableCell>
                     <TableCell>{order.total_price?.toFixed(2)}</TableCell>
                     <TableCell>
-                      <span className={
-                        order.payment_status === "paid" 
-                          ? "text-green-700 font-medium"
-                          : order.payment_status === "failed"
-                          ? "text-red-700 font-medium"
-                          : "text-yellow-600 font-medium"
-                      }>
-                        {order.payment_status || "pending"}
-                      </span>
+                      <div className="flex items-center">
+                        <span className={
+                          order.payment_status === "paid" 
+                            ? "text-green-700 font-medium"
+                            : order.payment_status === "failed"
+                            ? "text-red-700 font-medium"
+                            : "text-yellow-600 font-medium"
+                        }>
+                          {order.payment_status || "pending"}
+                        </span>
+                        <PaymentStatusModal
+                          orderId={order.id}
+                          currentStatus={order.payment_status}
+                          recipientName={order.recipient_name}
+                        />
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center">
