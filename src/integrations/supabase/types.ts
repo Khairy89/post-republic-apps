@@ -95,6 +95,7 @@ export type Database = {
           height: number
           id: string
           length: number
+          payment_status: string | null
           phone: string
           recipient_name: string
           repacking: boolean | null
@@ -124,6 +125,7 @@ export type Database = {
           height: number
           id?: string
           length: number
+          payment_status?: string | null
           phone: string
           recipient_name: string
           repacking?: boolean | null
@@ -153,6 +155,7 @@ export type Database = {
           height?: number
           id?: string
           length?: number
+          payment_status?: string | null
           phone?: string
           recipient_name?: string
           repacking?: boolean | null
