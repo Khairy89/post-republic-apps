@@ -52,7 +52,7 @@ const PriceBreakdown: React.FC<{ price: Price }> = ({ price }) => (
     </dl>
     <div className="text-xs text-muted-foreground mt-3">* Prices are estimates. Actual invoice may vary by DHL surcharges and currency.</div>
     <div className="text-xs text-muted-foreground">* Volumetric weight calculated using L×W×H÷5000</div>
-    <div className="text-xs text-muted-foreground">* Handling fee: RM20 for first kg + RM20 per additional kg</div>
+    <div className="text-xs text-muted-foreground">* Handling fee: RM30 for first kg + RM30 per additional kg</div>
   </div>
 );
 

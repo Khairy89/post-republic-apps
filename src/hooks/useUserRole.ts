@@ -17,18 +17,24 @@ export const useUserRole = () => {
       }
 
       try {
-        const { data, error } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .eq('role', 'admin')
-          .single();
-
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error checking user role:', error);
-          setIsAdmin(false);
+        // Check if user email is the admin email
+        if (user.email === 'mk.developeer@gmail.com') {
+          setIsAdmin(true);
         } else {
-          setIsAdmin(!!data);
+          // Also check database for role
+          const { data, error } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id)
+            .eq('role', 'admin')
+            .single();
+
+          if (error && error.code !== 'PGRST116') {
+            console.error('Error checking user role:', error);
+            setIsAdmin(false);
+          } else {
+            setIsAdmin(!!data);
+          }
         }
       } catch (error) {
         console.error('Error checking user role:', error);

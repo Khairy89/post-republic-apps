@@ -31,9 +31,9 @@ interface ShippingOrderFormProps {
 const REPACKING_FEE = 10;  // RM
 const VOLUMETRIC_DIVISOR = 5000; // Standard DHL volumetric divisor (cm³/kg)
 
-// Calculate handling fee: RM20 for first kg + RM20 per additional kg
+// Calculate handling fee: RM30 for first kg + RM30 per additional kg
 const calculateHandlingFee = (chargeableWeight: number) => {
-  return 20 + (Math.max(0, chargeableWeight - 1) * 20);
+  return 30 + (Math.max(0, chargeableWeight - 1) * 30);
 };
 
 const initialForm: FormState = {

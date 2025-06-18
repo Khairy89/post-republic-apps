@@ -2,16 +2,28 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useUserRole } from '@/hooks/useUserRole';
 
 export const useShippingOrders = () => {
+  const { isAdmin } = useUserRole();
+  
   return useQuery({
-    queryKey: ['shipping-orders'],
+    queryKey: ['shipping-orders', isAdmin],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('shipping_orders')
         .select('*')
         .order('created_at', { ascending: false });
       
+      // If not admin, only show user's own orders
+      if (!isAdmin) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          query = query.eq('user_id', user.id);
+        }
+      }
+      
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },

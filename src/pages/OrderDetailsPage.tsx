@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -57,6 +58,18 @@ const OrderDetailsPage: React.FC = () => {
         <h2 className="text-xl font-bold mb-4">Order Details</h2>
         <div className="border p-4 rounded-lg bg-background shadow-sm">
           <div className="mb-2"><span className="font-medium">Status:</span> <span className="capitalize">{order.status || "pending"}</span></div>
+          <div className="mb-2">
+            <span className="font-medium">Payment Status:</span> 
+            <span className={`ml-2 capitalize ${
+              order.payment_status === "paid" 
+                ? "text-green-700 font-medium"
+                : order.payment_status === "failed"
+                ? "text-red-700 font-medium"
+                : "text-yellow-600 font-medium"
+            }`}>
+              {order.payment_status || "pending"}
+            </span>
+          </div>
           <div className="mb-2">
             <span className="font-medium">Tracking Number:</span> 
             <div className="inline-flex items-center ml-2">
