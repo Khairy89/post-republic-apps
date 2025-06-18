@@ -4,7 +4,8 @@ import { useShippingOrders } from "@/hooks/useShippingOrders";
 import { useAuth } from "@/hooks/useAuth";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Link } from "react-router-dom";
-import { AlertCircle, ExternalLink } from "lucide-react";
+import { AlertCircle, ExternalLink, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import TrackingNumberModal from "@/components/TrackingNumberModal";
 import Header from '@/components/Header';
 
@@ -31,7 +32,15 @@ const OrdersPage: React.FC = () => {
     <>
       <Header user={user} onSignOut={handleSignOut} />
       <div className="max-w-6xl mx-auto pt-10 pb-20 px-3">
-        <h2 className="text-2xl font-bold mb-6 text-center">My Orders</h2>
+        <div className="flex items-center gap-4 mb-6">
+          <Link to="/">
+            <Button variant="outline" size="sm" className="flex items-center gap-2">
+              <ArrowLeft size={16} />
+              Back to Home
+            </Button>
+          </Link>
+          <h2 className="text-2xl font-bold">My Orders</h2>
+        </div>
         
         {isLoading ? (
           <div className="flex justify-center py-12">Loading orders...</div>
