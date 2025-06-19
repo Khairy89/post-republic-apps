@@ -51,10 +51,12 @@ const Index = () => {
 
             {/* Navigation Items */}
             <div className="flex items-center gap-6">
-              <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                <Search size={16} />
-                <span className="hidden sm:inline">Track Shipment</span>
-              </Button>
+              <Link to="/calculator">
+                <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                  <Search size={16} />
+                  <span className="hidden sm:inline">Rate Calculator</span>
+                </Button>
+              </Link>
               
               {user ? (
                 <UserNav user={user} onSignOut={() => {}} />
