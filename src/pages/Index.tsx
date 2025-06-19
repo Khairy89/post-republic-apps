@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import ShippingOrderForm from "@/components/ShippingOrderForm";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -7,7 +8,7 @@ import UserNav from "@/components/UserNav";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Search, LogIn } from "lucide-react";
+import { Calculator, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -52,6 +53,7 @@ const Index = () => {
             <div className="flex items-center gap-6">
               <Link to="/calculator">
                 <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                  <Calculator size={16} />
                   <span className="hidden sm:inline">Rate Calculator</span>
                 </Button>
               </Link>
