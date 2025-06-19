@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,7 +17,6 @@ type FormState = {
   state: string;
   country: string;
   phone: string;
-  repacking: boolean;
   weight: number;
   length: number;
   width: number;
@@ -28,7 +28,6 @@ interface ShippingOrderFormProps {
   onAuthRequired?: () => void;
 }
 
-const REPACKING_FEE = 10;  // RM
 const VOLUMETRIC_DIVISOR = 5000; // Standard DHL volumetric divisor (cm³/kg)
 
 // Calculate handling fee: RM30 for first kg + RM20 per additional kg
@@ -44,7 +43,6 @@ const initialForm: FormState = {
   state: "",
   country: "",
   phone: "",
-  repacking: false,
   weight: 0,
   length: 0,
   width: 0,
@@ -116,14 +114,13 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequi
     const fuelSurchargeAmount = base * fuelSurchargeRate;
     const handlingFee = calculateHandlingFee(chargeableWeight);
     
-    let total = base + fuelSurchargeAmount + handlingFee;
-    if (form.repacking) total += REPACKING_FEE;
+    const total = base + fuelSurchargeAmount + handlingFee;
 
     return {
       base,
       fuelSurcharge: fuelSurchargeAmount,
       handling: handlingFee,
-      repacking: form.repacking ? REPACKING_FEE : 0,
+      repacking: 0,
       total,
       chargeableWeight,
       actualWeight: form.weight,
@@ -135,10 +132,10 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequi
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const target = e.target as HTMLInputElement;
-    const { name, value, type, checked } = target;
+    const { name, value, type } = target;
     setForm((f) => ({
       ...f,
-      [name]: type === "checkbox" ? checked : type === "number" ? parseFloat(value) || 0 : value,
+      [name]: type === "number" ? parseFloat(value) || 0 : value,
     }));
   };
 
@@ -176,11 +173,11 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequi
         length: form.length,
         width: form.width,
         height: form.height,
-        repacking: form.repacking,
+        repacking: false,
         base_price: price.base,
         fuel_surcharge: price.fuelSurcharge,
         handling_fee: price.handling,
-        repacking_fee: price.repacking,
+        repacking_fee: 0,
         total_price: price.total,
         chargeable_weight: price.chargeableWeight,
         actual_weight: price.actualWeight,
@@ -368,20 +365,6 @@ const ShippingOrderForm: React.FC<ShippingOrderFormProps> = ({ user, onAuthRequi
             </div>
           </div>
         )}
-      </div>
-
-      <div className="flex items-center mt-4">
-        <input
-          type="checkbox"
-          id="repacking"
-          name="repacking"
-          checked={form.repacking}
-          onChange={onInputChange}
-          className="mr-2 accent-primary scale-125"
-        />
-        <Label htmlFor="repacking" className="ml-1 select-none">
-          Repacking required <span className="text-xs text-muted-foreground">(RM10 additional charge)</span>
-        </Label>
       </div>
 
       {!showBreakdown && (

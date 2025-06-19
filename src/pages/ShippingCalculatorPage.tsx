@@ -11,14 +11,12 @@ import { ArrowLeft, Calculator } from "lucide-react";
 
 type CalculatorForm = {
   country: string;
-  repacking: boolean;
   weight: number;
   length: number;
   width: number;
   height: number;
 };
 
-const REPACKING_FEE = 10;
 const VOLUMETRIC_DIVISOR = 5000;
 
 const calculateHandlingFee = (chargeableWeight: number) => {
@@ -27,7 +25,6 @@ const calculateHandlingFee = (chargeableWeight: number) => {
 
 const initialForm: CalculatorForm = {
   country: "",
-  repacking: false,
   weight: 0,
   length: 0,
   width: 0,
@@ -88,14 +85,13 @@ const ShippingCalculatorPage = () => {
     const fuelSurchargeAmount = base * fuelSurchargeRate;
     const handlingFee = calculateHandlingFee(chargeableWeight);
     
-    let total = base + fuelSurchargeAmount + handlingFee;
-    if (form.repacking) total += REPACKING_FEE;
+    const total = base + fuelSurchargeAmount + handlingFee;
 
     return {
       base,
       fuelSurcharge: fuelSurchargeAmount,
       handling: handlingFee,
-      repacking: form.repacking ? REPACKING_FEE : 0,
+      repacking: 0,
       total,
       chargeableWeight,
       actualWeight: form.weight,
@@ -107,10 +103,10 @@ const ShippingCalculatorPage = () => {
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
-    const { name, value, type, checked } = target;
+    const { name, value, type } = target;
     setForm((f) => ({
       ...f,
-      [name]: type === "checkbox" ? checked : type === "number" ? parseFloat(value) || 0 : value,
+      [name]: type === "number" ? parseFloat(value) || 0 : value,
     }));
   };
 
@@ -261,21 +257,6 @@ const ShippingCalculatorPage = () => {
                 </div>
               </div>
             )}
-          </div>
-
-          {/* Repacking Option */}
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="repacking"
-              name="repacking"
-              checked={form.repacking}
-              onChange={onInputChange}
-              className="mr-2 accent-primary scale-125"
-            />
-            <Label htmlFor="repacking" className="ml-1 select-none">
-              Repacking required <span className="text-xs text-muted-foreground">(RM10 additional charge)</span>
-            </Label>
           </div>
 
           {!showBreakdown && (
