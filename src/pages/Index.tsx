@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import ShippingOrderForm from "@/components/ShippingOrderForm";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -53,7 +52,6 @@ const Index = () => {
             <div className="flex items-center gap-6">
               <Link to="/calculator">
                 <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                  <Search size={16} />
                   <span className="hidden sm:inline">Rate Calculator</span>
                 </Button>
               </Link>
