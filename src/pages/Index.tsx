@@ -52,7 +52,7 @@ const Index = () => {
             {/* Navigation Items */}
             <div className="flex items-center gap-6">
               <Link to="/calculator">
-                <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
                   <Calculator size={16} />
                   <span className="hidden sm:inline">Rate Calculator</span>
                 </Button>
@@ -65,7 +65,7 @@ const Index = () => {
                   <Dialog open={showAuth} onOpenChange={setShowAuth}>
                     <DialogTrigger asChild>
                       <Button 
-                        variant="ghost" 
+                        variant="outline" 
                         size="sm" 
                         className="flex items-center gap-2"
                         onClick={() => handleAuthOpen('login')}
