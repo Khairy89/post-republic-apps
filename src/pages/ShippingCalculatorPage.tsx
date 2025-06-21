@@ -14,7 +14,7 @@ type CalculatorForm = {
   height: number;
 };
 
-type EbayCalculatorForm = {
+type EbayCalculatorFormData = {
   itemCost: number;
   profitMargin: number;
   ebayFees: number;
@@ -35,7 +35,7 @@ const initialForm: CalculatorForm = {
   height: 0,
 };
 
-const initialEbayForm: EbayCalculatorForm = {
+const initialEbayForm: EbayCalculatorFormData = {
   itemCost: 0,
   profitMargin: 20,
   ebayFees: 12.9,
@@ -44,7 +44,7 @@ const initialEbayForm: EbayCalculatorForm = {
 
 const ShippingCalculatorPage = () => {
   const [form, setForm] = useState<CalculatorForm>(initialForm);
-  const [ebayForm, setEbayForm] = useState<EbayCalculatorForm>(initialEbayForm);
+  const [ebayForm, setEbayForm] = useState<EbayCalculatorFormData>(initialEbayForm);
   const [showBreakdown, setShowBreakdown] = useState(false);
 
   const { data: shippingRates } = useShippingRates();
