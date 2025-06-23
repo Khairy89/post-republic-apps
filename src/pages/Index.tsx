@@ -8,7 +8,7 @@ import UserNav from "@/components/UserNav";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Calculator, LogIn } from "lucide-react";
+import { Calculator, LogIn, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -55,6 +55,13 @@ const Index = () => {
                 <Button variant="outline" size="sm" className="flex items-center gap-2">
                   <Calculator size={16} />
                   <span className="hidden sm:inline">Rate Calculator</span>
+                </Button>
+              </Link>
+              
+              <Link to="/coaching">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <Users size={16} />
+                  <span className="hidden sm:inline">Coaching</span>
                 </Button>
               </Link>
               

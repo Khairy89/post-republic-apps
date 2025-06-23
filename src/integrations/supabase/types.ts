@@ -9,6 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      coaching_registrations: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string
+          goals_challenges: string | null
+          id: string
+          last_name: string
+          payment_status: string | null
+          phone: string
+          preferred_contact: string
+          privacy_accepted: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name: string
+          goals_challenges?: string | null
+          id?: string
+          last_name: string
+          payment_status?: string | null
+          phone: string
+          preferred_contact: string
+          privacy_accepted?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string
+          goals_challenges?: string | null
+          id?: string
+          last_name?: string
+          payment_status?: string | null
+          phone?: string
+          preferred_contact?: string
+          privacy_accepted?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       country_zones: {
         Row: {
           country_code: string
