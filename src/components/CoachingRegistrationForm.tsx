@@ -79,7 +79,37 @@ const CoachingRegistrationForm: React.FC<CoachingRegistrationFormProps> = ({ onS
     setLoading(true);
 
     try {
-      const { error } = await supabase
+      // First, try to create the user account
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email.trim().toLowerCase(),
+        password: Math.random().toString(36).slice(-12) + "A1!", // Generate a temporary password
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
+            first_name: formData.firstName.trim(),
+            last_name: formData.lastName.trim(),
+            phone: formData.phone.trim(),
+          },
+        },
+      });
+
+      if (authError) {
+        // If user already exists, that's okay - we'll still save the coaching registration
+        if (authError.message.includes('already registered')) {
+          console.log('User already exists, proceeding with coaching registration');
+        } else {
+          console.error('Auth error:', authError);
+          toast({
+            title: "Account creation failed",
+            description: "There was an issue creating your account, but we'll still save your coaching registration.",
+            variant: "destructive",
+          });
+        }
+      }
+
+      // Save the coaching registration regardless of auth success/failure
+      const { error: registrationError } = await supabase
         .from('coaching_registrations')
         .insert([
           {
@@ -93,8 +123,8 @@ const CoachingRegistrationForm: React.FC<CoachingRegistrationFormProps> = ({ onS
           }
         ]);
 
-      if (error) {
-        console.error('Registration error:', error);
+      if (registrationError) {
+        console.error('Registration error:', registrationError);
         toast({
           title: "Registration failed",
           description: "There was an error saving your information. Please try again.",
@@ -103,10 +133,18 @@ const CoachingRegistrationForm: React.FC<CoachingRegistrationFormProps> = ({ onS
         return;
       }
 
-      toast({
-        title: "Registration successful!",
-        description: "Your information has been saved. We'll contact you soon.",
-      });
+      // Success message based on whether account was created
+      if (authData?.user && !authError) {
+        toast({
+          title: "Registration successful!",
+          description: "Your coaching session has been registered and an account has been created. Please check your email to verify your account.",
+        });
+      } else {
+        toast({
+          title: "Registration successful!",
+          description: "Your coaching session has been registered. We'll contact you soon via your preferred method.",
+        });
+      }
 
       onSuccess();
     } catch (error) {
@@ -252,9 +290,17 @@ const CoachingRegistrationForm: React.FC<CoachingRegistrationFormProps> = ({ onS
 
           <div className="bg-blue-50 p-4 rounded-lg">
             <h4 className="font-semibold mb-2">What happens next?</h4>
-            <p className="text-sm text-muted-foreground">
-              After registration, we'll contact you within 24 hours to schedule your session and provide payment details. 
-              Payment processing integration is coming soon!
+            <p className="text-sm text-muted-foreground mb-2">
+              After registration, we'll create an account for you and send a verification email. You'll be able to:
+            </p>
+            <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+              <li>Access your coaching dashboard</li>
+              <li>Schedule and manage your sessions</li>
+              <li>View session recordings and materials</li>
+              <li>Track your progress</li>
+            </ul>
+            <p className="text-sm text-muted-foreground mt-2">
+              We'll also contact you within 24 hours to schedule your session and provide payment details.
             </p>
           </div>
 
@@ -267,10 +313,10 @@ const CoachingRegistrationForm: React.FC<CoachingRegistrationFormProps> = ({ onS
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Registering...
+                Creating Account & Registering...
               </>
             ) : (
-              "Complete Registration"
+              "Complete Registration & Create Account"
             )}
           </Button>
         </form>

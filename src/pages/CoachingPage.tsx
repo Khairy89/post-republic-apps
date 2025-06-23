@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,6 +57,10 @@ const CoachingPage = () => {
     {
       question: "What's your refund policy?",
       answer: "If you're not satisfied within the first 15 minutes of the session, we'll provide a full refund."
+    },
+    {
+      question: "Will I get an account to track my progress?",
+      answer: "Yes! When you register, we'll automatically create an account for you. Check your email for verification instructions to access your coaching dashboard."
     }
   ];
 
@@ -69,15 +72,39 @@ const CoachingPage = () => {
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
           <h1 className="text-3xl font-bold mb-4">Registration Successful!</h1>
           <p className="text-lg text-muted-foreground mb-6">
-            Thank you for registering! Your information has been saved successfully.
+            Thank you for registering! Your coaching session has been booked successfully.
           </p>
-          <Card className="p-6 bg-blue-50 border-blue-200">
+          <Card className="p-6 bg-blue-50 border-blue-200 mb-6">
+            <h3 className="text-xl font-semibold mb-3">Account Created!</h3>
+            <p className="text-muted-foreground mb-4">
+              We've automatically created an account for you. Please check your email for verification instructions.
+            </p>
+            <div className="text-left space-y-2 text-sm text-muted-foreground">
+              <p><strong>What you'll get access to:</strong></p>
+              <ul className="list-disc list-inside space-y-1 ml-4">
+                <li>Personal coaching dashboard</li>
+                <li>Session scheduling tools</li>
+                <li>Access to session recordings</li>
+                <li>Progress tracking</li>
+                <li>Resource library</li>
+              </ul>
+            </div>
+          </Card>
+          <Card className="p-6 bg-green-50 border-green-200">
             <h3 className="text-xl font-semibold mb-3">What's Next?</h3>
             <p className="text-muted-foreground mb-4">
-              Payment processing is coming soon. We'll contact you shortly via your preferred method to complete your booking and schedule your coaching session.
+              We'll contact you within 24 hours via your preferred method to:
             </p>
-            <p className="text-sm text-muted-foreground">
-              In the meantime, prepare any specific questions or challenges you'd like to discuss during our session.
+            <div className="text-left space-y-2 text-sm text-muted-foreground">
+              <ul className="list-disc list-inside space-y-1 ml-4">
+                <li>Schedule your coaching session</li>
+                <li>Provide payment details</li>
+                <li>Share preparation materials</li>
+                <li>Answer any questions you may have</li>
+              </ul>
+            </div>
+            <p className="text-sm text-muted-foreground mt-4">
+              In the meantime, verify your email and prepare any specific questions or challenges you'd like to discuss during our session.
             </p>
           </Card>
           <Link to="/" className="inline-block mt-6">
@@ -133,6 +160,10 @@ const CoachingPage = () => {
                 <CheckCircle className="w-5 h-5 text-green-500" />
                 <span>1 week follow-up support</span>
               </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span>Personal dashboard & progress tracking</span>
+              </div>
             </div>
             <Button size="lg" onClick={handleGetStarted} className="text-lg px-8 py-4">
               Get Started - RM500
@@ -179,6 +210,10 @@ const CoachingPage = () => {
                     <li className="flex items-center gap-2">
                       <CheckCircle className="w-4 h-4 text-green-500" />
                       <span>Recording of the session</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span>Personal dashboard access</span>
                     </li>
                   </ul>
                 </div>
