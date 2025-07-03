@@ -18,7 +18,7 @@ Key highlights:
 
 ## Live Demo
 
-[![Courier Service Dashboard](./assets/screenshot.PNG)](https://post-republic.lovable.app/)
+[![Courier Service Dashboard](./assets/banner.png)](https://www.postrepublic.my/)
 
 *Click the image above to visit the live website*
 
@@ -73,14 +73,6 @@ This project is built with modern web technologies:
 - Route optimization
 - Analytics dashboard
 - Mobile-responsive design
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## License
 
